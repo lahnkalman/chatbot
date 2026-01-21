@@ -1,163 +1,105 @@
 <!doctype html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="utf-8">
     <title>סוכן הקצאה לימודי</title>
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1100px;
-            margin: auto;
-            padding: 20px;
-        }
-
-        form {
-            margin-bottom: 30px;
-        }
-
-        .charts-row {
-            display: flex;
-            gap: 40px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .chart-box {
-            width: 280px;
-            text-align: center;
-        }
-
-        h3 {
-            margin-top: 30px;
-        }
-
-        button {
-            margin-top: 10px;
-            padding: 6px 12px;
-        }
-
-        hr {
-            margin: 30px 0;
-        }
+        body { font-family: Arial, sans-serif; background:#f6f7fb; margin:0; }
+        .wrap { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        .card { background:#fff; border:1px solid #e6e6e6; border-radius:12px; padding:16px; margin-top:16px; }
+        .grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+        @media (max-width: 800px){ .grid { grid-template-columns: 1fr; } }
+        label { display:block; margin-top:10px; font-weight:600; }
+        input, select { width:100%; padding:10px; border:1px solid #ccc; border-radius:10px; margin-top:6px; }
+        button { width:100%; padding:12px; border:0; border-radius:10px; background:#2f6fed; color:#fff; font-size:16px; cursor:pointer; margin-top:14px; }
+        ul { margin: 10px 0 0 0; padding: 0 18px 0 0; }
+        .chart-box { width: 320px; max-width: 100%; margin:auto; }
+        .muted { color:#555; }
     </style>
 </head>
 
 <body>
+<div class="wrap">
 
-<h2>🤖 סוכן הקצאה לימודי (כסף מדומה)</h2>
+    <h2>🤖 סוכן הקצאה לימודי (כסף מדומה)</h2>
 
-<a href="/history">📁 היסטוריה</a>
-<hr>
+    <div class="card">
+        <form method="post">
 
-<form method="post">
-    סכום (ש"ח):<br>
-    <input name="amount" required><br><br>
+            <label>סכום (ש"ח)</label>
+            <input type="number" name="amount" required value="{{ profile.amount if profile }}">
 
-    אופק זמן (שנים):<br>
-    <input name="years" required><br><br>
+            <label>אופק זמן (שנים)</label>
+            <input type="number" name="years" required value="{{ profile.years if profile }}">
 
-    רמת סיכון:<br>
-    <select name="risk">
-        <option>נמוך</option>
-        <option>בינוני</option>
-        <option>גבוה</option>
-    </select><br><br>
+            <label>רמת סיכון</label>
+            <select name="risk">
+                <option>נמוך</option>
+                <option>בינוני</option>
+                <option>גבוה</option>
+            </select>
 
-    נזילות:<br>
-    <select name="liquidity">
-        <option>גבוהה</option>
-        <option>בינונית</option>
-        <option>נמוכה</option>
-    </select><br><br>
+            <label>נזילות</label>
+            <select name="liquidity">
+                <option>גבוהה</option>
+                <option>בינונית</option>
+                <option>נמוכה</option>
+            </select>
 
-    יעד:<br>
-    <select name="goal">
-        <option>שמירה על ערך (שמרני)</option>
-        <option>איזון (ביניים)</option>
-        <option>צמיחה (אגרסיבי)</option>
-    </select><br><br>
+            <label>יעד</label>
+            <select name="goal">
+                <option>שמירה על ערך (שמרני)</option>
+                <option>איזון (ביניים)</option>
+                <option>צמיחה (אגרסיבי)</option>
+            </select>
 
-    ניסיון:<br>
-    <select name="experience">
-        <option>מתחיל</option>
-        <option>בינוני</option>
-        <option>מנוסה</option>
-    </select><br><br>
+            <label>ניסיון</label>
+            <select name="experience">
+                <option>מתחיל</option>
+                <option>בינוני</option>
+                <option>מנוסה</option>
+            </select>
 
-    <button type="submit">חשב הקצאה</button>
-</form>
-
-{% if result %}
-<hr>
-
-<h3>📊 הקצאת נכסים – השוואה</h3>
-
-<div class="charts-row">
-    <div class="chart-box">
-        <canvas id="baseChart"></canvas>
-        <p>הקצאה בסיסית</p>
+            <button type="submit">חשב הקצאה</button>
+            <div class="muted">⚠️ סימולטור לימודי בלבד. לא ייעוץ השקעות.</div>
+        </form>
     </div>
 
-    <div class="chart-box">
-        <canvas id="consChart"></canvas>
-        <p>מסלול שמרני</p>
+    {% if result %}
+    <div class="card">
+        <h3>📊 הקצאה מדומה</h3>
+        <ul>
+            {% for k, v in result.items() %}
+                <li>{{ k }} — {{ v }} ש"ח</li>
+            {% endfor %}
+        </ul>
+
+        {% if notes %}
+            <p class="muted">{{ notes }}</p>
+        {% endif %}
+
+        <div class="chart-box">
+            <canvas id="pie"></canvas>
+        </div>
     </div>
 
-    <div class="chart-box">
-        <canvas id="aggrChart"></canvas>
-        <p>מסלול אגרסיבי</p>
-    </div>
-</div>
+    <script>
+        const labels = {{ result.keys()|list|tojson }};
+        const values = {{ result.values()|list|tojson }};
 
-<script>
-    function drawChart(canvasId, dataObj, title) {
-        const ctx = document.getElementById(canvasId);
-        new Chart(ctx, {
-            type: 'pie',
+        new Chart(document.getElementById("pie"), {
+            type: "pie",
             data: {
-                labels: Object.keys(dataObj),
-                datasets: [{
-                    data: Object.values(dataObj)
-                }]
+                labels: labels,
+                datasets: [{ data: values }]
             },
-            options: {
-                plugins: {
-                    legend: { position: 'bottom' },
-                    title: { display: false }
-                }
-            }
+            options: { responsive: true }
         });
-    }
+    </script>
+    {% endif %}
 
-    drawChart("baseChart", {{ result.allocation | tojson }});
-    drawChart("consChart", {{ result.conservative | tojson }});
-    drawChart("aggrChart", {{ result.aggressive | tojson }});
-</script>
-
-<hr>
-
-<form method="post">
-    {% for k, v in profile.items() %}
-        <input type="hidden" name="{{ k }}" value="{{ v }}">
-    {% endfor %}
-    <button name="whatif" value="down">⬇️ הקטן סיכון</button>
-    <button name="whatif" value="up">⬆️ הגדל סיכון</button>
-</form>
-
-{% if whatif %}
-<h3>🔄 What-If (שינוי סיכון)</h3>
-<ul>
-{% for k, v in whatif.items() %}
-    <li>{{ k }} – {{ v }} ש"ח</li>
-{% endfor %}
-</ul>
-{% endif %}
-
-{% endif %}
-
+</div>
 </body>
 </html>
