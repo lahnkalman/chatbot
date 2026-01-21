@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="he">
+<head>
+    <meta charset="utf-8">
+    <title>היסטוריית תיקים</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .entry {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .entry h4 {
+            margin: 0 0 10px 0;
+        }
+
+        a.button {
+            display: inline-block;
+            padding: 6px 10px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        a.button:hover {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+
+<h2>📁 היסטוריית תיקים</h2>
+
+<a href="/" class="button">⬅ חזרה למסך הראשי</a>
+<hr>
+
+{% if history %}
+    {% for item in history %}
+        <div class="entry">
+            <h4>🕒 {{ item.timestamp }}</h4>
+
+            <p>
+                <b>סכום:</b> {{ item.profile.amount }} ש"ח |
+                <b>שנים:</b> {{ item.profile.years }} |
+                <b>סיכון:</b> {{ item.profile.risk }} |
+                <b>נזילות:</b> {{ item.profile.liquidity }}
+            </p>
+
+            <details>
+                <summary>📊 הצג הקצאה</summary>
+                <ul>
+                    {% for k, v in item.allocation.items() %}
+                        <li>{{ k }} – {{ v }} ש"ח</li>
+                    {% endfor %}
+                </ul>
+                <p><b>הערה:</b> {{ item.notes }}</p>
+            </details>
+
+            <a href="/load/{{ loop.index0 }}" class="button">🔁 טען תיק</a>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>אין היסטוריה עדיין.</p>
+{% endif %}
+
+</body>
+</html>
