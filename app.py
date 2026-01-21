@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from openai import OpenAI
 import json
 import os
@@ -165,7 +165,12 @@ def index():
         }
 
         result = run_engine(profile)
-        notes = explain(profile, result)
+
+        try:
+            notes = explain(profile, result)
+        except Exception:
+            notes = "לא הצלחתי להביא הסבר מה-AI כרגע, אבל ההקצאה חושבה מקומית."
+
         save_history(profile, result, notes)
 
     return render_template("index.html", result=result, profile=profile, notes=notes)
