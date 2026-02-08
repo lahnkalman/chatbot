@@ -19,12 +19,6 @@ Users define a risk profile and receive a deterministic allocation with a short 
 - Load existing portfolio
 - Compare two portfolios (basic)
 
-## Live Demo
-👉 https://chatbot-pskn.onrender.com
-
-## Screenshots
-(Add 1–2 screenshots here)
-
 ## Run Locally
 ```bash
 git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
