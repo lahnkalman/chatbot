@@ -1,7 +1,6 @@
 # Investment Allocation Agent (Educational)
-
 An educational web app that simulates investment portfolio allocation using paper money.
-Users define a risk profile and receive a deterministic allocation with a short AI-generated explanation.
+Users define a risk profile and receive a deterministic, rule-based asset allocation, including visual breakdowns and a concise AI-generated explanation of the portfolio structure.
 
 ## Tech Stack
 - Python
@@ -18,6 +17,9 @@ Users define a risk profile and receive a deterministic allocation with a short 
 - Portfolio history
 - Load existing portfolio
 - Compare two portfolios (basic)
+
+## Live Demo
+https://chatbot-pskn.onrender.com
 
 ## Run Locally
 ```bash
