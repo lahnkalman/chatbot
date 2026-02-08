@@ -20,7 +20,7 @@ Users define a risk profile and receive a deterministic allocation with a short 
 - Compare two portfolios (basic)
 
 ## Live Demo
-👉 https://YOUR-RENDER-URL
+👉 https://chatbot-pskn.onrender.com
 
 ## Screenshots
 (Add 1–2 screenshots here)
@@ -34,3 +34,5 @@ source venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
 python app.py
+
+
